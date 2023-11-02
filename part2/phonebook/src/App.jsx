@@ -33,20 +33,36 @@ const App = () => {
     e.preventDefault();
     const found = persons.find((person) => person.name === newName);
     if (found) {
-      alert(`${newName} is already added to phonebook`);
+      // Update existing person's phone number
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personService
+          .update(found.id, { ...found, number: newNumber })
+          .then((returnedPerson) => {
+            setPersons(
+              persons.map((p) => (p.id !== found.id ? p : returnedPerson))
+            );
+            setNewName("");
+            setNewNumber("");
+          });
+      }
       return;
+    } else {
+      // Add new person
+      const personObj = {
+        name: newName,
+        number: newNumber,
+      };
+
+      personService.create(personObj).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+      });
     }
-
-    const personObj = {
-      name: newName,
-      number: newNumber,
-    };
-
-    personService.create(personObj).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-    });
   };
 
   const removePerson = (id) => {
