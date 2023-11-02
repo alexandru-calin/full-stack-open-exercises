@@ -49,6 +49,16 @@ const App = () => {
     });
   };
 
+  const removePerson = (id) => {
+    const { name } = persons.find((p) => p.id === id);
+
+    if (window.confirm(`delete ${name} ?`)) {
+      personService.remove(id).then(() => {
+        setPersons(persons.filter((p) => p.id !== id));
+      });
+    }
+  };
+
   const personsToShow = search
     ? persons.filter((person) =>
         person.name.toLowerCase().includes(search.toLowerCase())
@@ -73,7 +83,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} removePersonById={removePerson} />
     </>
   );
 };
