@@ -2,4 +2,4 @@
 
 ## Overview
 
-Exercises 2.6 to 2.11
+Exercises 2.6 to 2.15
