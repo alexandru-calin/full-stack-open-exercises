@@ -31,6 +31,11 @@ const App = () => {
     setSearch(value);
   };
 
+  const handleShowClick = (id) => {
+    const countryToShow = results.find((country) => country.cca2 === id);
+    setResults([countryToShow]);
+  };
+
   useEffect(initHook, []);
   useEffect(searchHook, [search]);
 
@@ -38,7 +43,7 @@ const App = () => {
     <>
       <span>find countries</span>
       <input value={search} onChange={handleSearch} />
-      <Countries countries={results} />
+      <Countries countries={results} showCountry={handleShowClick} />
     </>
   );
 };
