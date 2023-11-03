@@ -1,15 +1,18 @@
+import "./index.css";
 import { useState, useEffect } from "react";
 import personService from "./services/persons";
 
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [notificationMsg, setNotificationMsg] = useState(null);
 
   const hook = () => {
     personService.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -27,6 +30,13 @@ const App = () => {
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
+  };
+
+  const showNotification = (msg, seconds) => {
+    setNotificationMsg(msg);
+    setTimeout(() => {
+      setNotificationMsg(null);
+    }, seconds * 1000);
   };
 
   const addPerson = (e) => {
@@ -47,6 +57,10 @@ const App = () => {
             );
             setNewName("");
             setNewNumber("");
+            showNotification(
+              `Changed ${returnedPerson.name}'s phone number`,
+              3
+            );
           });
       }
       return;
@@ -61,6 +75,7 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName("");
         setNewNumber("");
+        showNotification(`Added ${returnedPerson.name}`, 3);
       });
     }
   };
@@ -84,6 +99,8 @@ const App = () => {
   return (
     <>
       <h2>Phonebook</h2>
+
+      <Notification message={notificationMsg} />
 
       <Filter search={search} handleSearchChange={handleSearchChange} />
 
