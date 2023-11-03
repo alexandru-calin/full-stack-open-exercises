@@ -12,7 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
-  const [notificationMsg, setNotificationMsg] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   const hook = () => {
     personService.getAll().then((initialPersons) => setPersons(initialPersons));
@@ -32,10 +32,10 @@ const App = () => {
     setSearch(e.target.value);
   };
 
-  const showNotification = (msg, seconds) => {
-    setNotificationMsg(msg);
+  const showNotification = (message, success, seconds) => {
+    setNotification({ message, success });
     setTimeout(() => {
-      setNotificationMsg(null);
+      setNotification(null);
     }, seconds * 1000);
   };
 
@@ -59,8 +59,19 @@ const App = () => {
             setNewNumber("");
             showNotification(
               `Changed ${returnedPerson.name}'s phone number`,
+              true,
               3
             );
+          })
+          .catch((error) => {
+            setNewName("");
+            setNewNumber("");
+            showNotification(
+              `Information of ${found.name} has already been removed from server`,
+              false,
+              3
+            );
+            setPersons(persons.filter((p) => p.id !== found.id));
           });
       }
       return;
@@ -75,7 +86,7 @@ const App = () => {
         setPersons(persons.concat(returnedPerson));
         setNewName("");
         setNewNumber("");
-        showNotification(`Added ${returnedPerson.name}`, 3);
+        showNotification(`Added ${returnedPerson.name}`, true, 3);
       });
     }
   };
@@ -100,7 +111,7 @@ const App = () => {
     <>
       <h2>Phonebook</h2>
 
-      <Notification message={notificationMsg} />
+      <Notification notification={notification} />
 
       <Filter search={search} handleSearchChange={handleSearchChange} />
 
