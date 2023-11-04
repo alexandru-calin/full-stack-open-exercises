@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import countryService from "./services/countries";
+import weatherService from "./services/weather";
 
 import Countries from "./components/Countries";
 
@@ -7,6 +8,7 @@ const App = () => {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
   const [results, setResults] = useState([]);
+  const [weather, setWeather] = useState({});
 
   const initHook = () => {
     countryService
@@ -38,12 +40,24 @@ const App = () => {
 
   useEffect(initHook, []);
   useEffect(searchHook, [search]);
+  useEffect(() => {
+    if (results.length === 1) {
+      const capital = results[0].capital[0];
+      weatherService
+        .getWeatherOf(capital)
+        .then((weather) => setWeather(weather));
+    }
+  }, [results]);
 
   return (
     <>
       <span>find countries</span>
       <input value={search} onChange={handleSearch} />
-      <Countries countries={results} showCountry={handleShowClick} />
+      <Countries
+        countries={results}
+        showCountry={handleShowClick}
+        weather={weather}
+      />
     </>
   );
 };

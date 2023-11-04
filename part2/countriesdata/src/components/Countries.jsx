@@ -1,6 +1,6 @@
 import Country from "./Country";
 
-const Countries = ({ countries, showCountry }) => {
+const Countries = ({ countries, showCountry, weather }) => {
   if (!countries.length) {
     return null;
   }
@@ -22,7 +22,7 @@ const Countries = ({ countries, showCountry }) => {
     );
   }
 
-  return <Country country={countries[0]} />;
+  return <Country country={countries[0]} weather={weather} />;
 };
 
 export default Countries;

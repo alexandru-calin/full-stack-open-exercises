@@ -1,7 +1,9 @@
-const Country = ({ country }) => {
+import Weather from "./Weather";
+
+const Country = ({ country, weather }) => {
   return (
     <div>
-      <h2>{country.name.common}</h2>
+      <h1>{country.name.common}</h1>
       <p>capital {country.capital[0]}</p>
       <p>area {country.area}</p>
       <h3>languages:</h3>
@@ -11,6 +13,7 @@ const Country = ({ country }) => {
         ))}
       </ul>
       <img src={country.flags.svg} alt={country.flags.alt} width="200px" />
+      <Weather weather={weather} />
     </div>
   );
 };
